@@ -5,10 +5,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.example.coroutines.throttleFirst
 import org.example.coroutines.throttleLatest
-import org.example.kotlinBasic.AppStartDelegate
-import org.example.kotlinBasic.checkKey
-import org.example.kotlinBasic.findInt
-import org.example.kotlinBasic.shakerSort
+
 
 fun main() {
 
@@ -51,19 +48,19 @@ fun main() {
     //endregion*/
     runBlocking {
         val events = flow {
-            repeat(100) {
+            repeat(10) {
                 emit(it)
-                delay(100) // события каждые 200 мс
+                delay(200) // события каждые 200 мс
             }
         }
-        println("---- throttleFirst ----")
-        events
-            .throttleFirst(123)
-            .collect { println("first: $it at ${System.currentTimeMillis() % 10000}") }
 
-        println("---- throttleLatest ----")
         events
-            .throttleLatest(200)
-            .collect { println("latest: $it at ${System.currentTimeMillis() % 10000}") }
+            .throttleFirst(1000) // Временное окно в 1 секунду, ожидаемый результат: 0, 5
+            .collect { println("throttleFirst: $it at ${System.currentTimeMillis() % 10000}") }
+
+        
+        events
+            .throttleLatest(1000) // Временное окно в 1 секунду, ожидаемый результат: 4, 9
+            .collect { println("throttleLatest: $it at ${System.currentTimeMillis() % 10000}") }
     }
 }
